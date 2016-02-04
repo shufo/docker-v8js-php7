@@ -4,7 +4,7 @@ MAINTAINER shufo <meikyowise@gmail.com>
 RUN apt-get update
 RUN apt-get -y install git subversion make g++ python curl chrpath language-pack-en-base && apt-get clean
 RUN LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php && apt-get update
-RUN apt-get install -y php7.0 php7.0-cli php7.0-dev
+RUN apt-get install -y php7.0 php7.0-cli php7.0-dev && apt-get clean
 
 # depot tools
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git /usr/local/depot_tools
@@ -28,6 +28,9 @@ RUN git clone https://github.com/preillyme/v8js.git /usr/local/src/v8js
 RUN cd /usr/local/src/v8js && phpize && ./configure --with-v8js=/usr/local
 ENV NO_INTERACTION 1
 RUN cd /usr/local/src/v8js && make all test install
+
+# clean
+RUN rm -fR /usr/local/src/v8js /usr/local/src/v8
 
 # autoload v8js.so
 RUN echo extension=v8js.so > /etc/php/7.0/cli/conf.d/99-v8js.ini
